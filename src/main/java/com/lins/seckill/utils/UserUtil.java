@@ -28,7 +28,7 @@ public class UserUtil {
             user.setId((int) (13000000000L+i));
             user.setUserName("user"+i);
             user.setSalt("1a2b3c4d");
-            user.setPassword(MD5Util.inputPassToDbPass("password","1a2b3c4d"));
+            user.setPassword(MD5Util.inputPassToDBPass("password","1a2b3c4d"));
             users.add(user);
         }
         System.out.println("Create user...");

@@ -47,13 +47,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(user==null){
             throw new GlobalException(ResultEnum.LOGIN_ERROR);
         }
-        if(!MD5Util.formPassToDbPass(password,user.getSalt()).equals(user.getPassword())){
+        if(!MD5Util.formPassToDBPass(password,user.getSalt()).equals(user.getPassword())){
             throw new GlobalException(ResultEnum.LOGIN_ERROR);
         }
         //生成cookie
         String ticket= UUIDUtil.uuid();
         redisTemplate.opsForValue().set("user:"+ticket,user);
-        
+
         return null;
     }
 }

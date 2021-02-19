@@ -71,7 +71,7 @@
         //加密
         var password = md5(str);
         $.ajax({
-            url:"/login",
+            url:"/login/dologin",
             type: "POST",
             data:{
                 mobile:$("#mobile").val(),
