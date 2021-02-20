@@ -5,34 +5,68 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: 341282
+    password: egova
+    #è¿æ¥æ± 
     hikari:
-      #Á¬½Ó³ØÃû
       pool-name: DateHikariCP
-      #×îĞ¡¿ÕÏĞÁ¬½ÓÊı
+      #æœ€å°ç©ºé—²è¿æ¥æ•°
       minimum-idle: 5
-      #¿Õ¼äÁ¬½Ó´æ»õ×î´óÊ±¼ä£¬Ä¬ÈÏ600000£¨10min£©
-      idle-timeout: 1800000
-      #×î´óÁ¬½ÓÊı
+      #ç©ºé—²è¿æ¥æœ€å¤§å­˜æ´»æ—¶é—´ï¼Œé»˜è®¤ååˆ†é’Ÿ
+      idle-timeout: 18000
+      #æœ€å¤§è¿æ¥æ•°
       maximum-pool-size: 10
-      #´ÓÁ¬½Ó³Ø·µ»ØµÄÁ¬½Ó×Ô¶¯Ìá½»
+      #æ˜¯å¦è‡ªåŠ¨æäº¤
       auto-commit: true
-      #Á¬½Ó×î´ó´æ»îÊ±¼ä£¬0±íÊ¾ÓÀ¾Ã´æ»î£¬Ä¬ÈÏ1800000£¨30·ÖÖ§£©
-      max-lifetime: 1800000
-      #Á¬½Ó³¬Ê±Ê±¼ä£¬Ä¬ÈÏ30000£¨30s£©
+      #è¿æ¥æœ€å¤§å­˜æ´»æ—¶é—´ï¼Œ0è¡¨ç¤ºæ°¸ä¹…å­˜æ´»
+      max-lifetime: 18000
+      #è¿æ¥è¶…æ—¶æ—¶é—´
       connection-timeout: 30000
-      #²âÊÔÁ¬½ÓÊÇ·ñ¿ÉÓÃµÄ²éÑ¯Óï¾ä
+      #å¿ƒè·³æµ‹è¯•ï¼Œæµ‹è¯•è¿æ¥æ˜¯å¦å¯ç”¨
       connection-test-query: SELECT 1
-#mybatis-plusÏà¹ØÅäÖÃ
+
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      #å¯ç”¨é»˜è®¤é™æ€èµ„æºå¤„ç†ï¼Œé»˜è®¤å¯ç”¨
+      add-mappings: true
+      cache:
+        cachecontrol:
+          #ç¼“å­˜ç›¸åº”äº‹åŠ¡æ—¶é—´ï¼Œå•ä½ç§’
+          max-age: 3600
+      chain:
+        #èµ„æºé“¾å¯åŠ¨ç¼“å­˜ï¼Œé»˜è®¤å¯åŠ¨
+        cache: true
+        #å¯åŠ¨èµ„æºé“¾
+        enabled: true
+        #å¯ç”¨å‹ç¼©èµ„æº
+        compressed: true
+        #å¯ç”¨h5åº”ç”¨ç¼“å­˜
+        html-application-cache: true
+      static-locations: classpath:/static/
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: egovaredis
+    database: 0
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 8   #æœ€å¤§è¿æ¥æ•°
+        max-wait: 10000ms  #æœ€å¤§é˜»å¡ç­‰å¾…æ—¶é—´ï¼Œé»˜è®¤-1
+        max-idle: 200      #æœ€å¤§ç©ºé—²è¿æ¥ï¼Œé»˜è®¤8
+        min-idle: 5         #æœ€å°ç©ºé—²è¿æ¥
+
+
+#mybatis-plusçš„ç›¸å…³é…ç½®
 mybatis-plus:
-  #ÅäÖÃMapper.xmlÓ³ÉäÎÄ¼ş
+  #é…ç½®Mapper.xmlæ˜ å°„æ–‡ä»¶
   mapper-locations: classpath*:/mapper/*Mapper.xml
-  #ÅäÖÃMybatisÊı¾İ·µ»ØÀàĞÍ±ğÃû(Ä¬ÈÏ±ğÃûÊÇÀàÃû)
-  type-aliases-package: com.lins.seckill.entity
-  #×Ô¶¯½«ÏÂ»®Ïß¸ñÊ½µÄ±í×Ö¶Î£¬×ª»»ÎªÒÔÍÕ·å¸ñÊ½ÃüÃûµÄÊôĞÔ
-  configuration:
-    map-underscore-to-camel-case: true
-#Mybatis sql´òÓ¡£¨·½·¨½Ó¿ÚËùÔÚ°ü£¬²»ÊÇMapper.xmlËùÔÚµÄ°ü£©
+  #é…ç½®Mybatisæ•°æ®è¿”å›ç±»å‹åˆ«å(é»˜è®¤åˆ«åæ˜¯ç±»å)
+  type-aliases-package: com.xzm.seckill.bean
+
+#Mybatis sqlæ‰“å°ï¼ˆæ–¹æ³•æ¥å£æ‰€åœ¨åŒ…ï¼Œä¸æ˜¯Mapper.xmlæ‰€åœ¨çš„åŒ…ï¼‰
 logging:
   level:
-    com.lins.seckill.mapper: debug
+    com.xzm.seckill.mapper: debug
