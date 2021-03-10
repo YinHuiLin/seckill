@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lin
@@ -38,7 +38,7 @@ public class SeckillGoods implements Serializable {
     /**
      * 秒杀价
      */
-    private BigDecimal seckilPrice;
+    private BigDecimal seckillPrice;
 
     /**
      * 库存数量

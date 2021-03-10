@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @ClassName LoginVo
- * @Description TODO
+ * @Description 登陆参数
  * @Author lin
  * @Date 2021/2/19 16:16
  * @Version 1.0
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class LoginVo {
     @IsMobile
     @NotNull
-    private String phone;
+    private String mobile;
     @NotNull
     @Length(min = 32)
     private String password;

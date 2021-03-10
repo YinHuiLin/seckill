@@ -1,13 +1,13 @@
 package com.lins.seckill.exception;
 
-import com.lins.seckill.entity.ResultEnum;
+import com.lins.seckill.vo.ResultEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * @ClassName GlobalException
- * @Description TODO
+ * @Description 全局异常处理
  * @Author lin
  * @Date 2021/2/19 16:26
  * @Version 1.0

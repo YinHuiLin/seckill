@@ -5,13 +5,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lin
@@ -63,12 +65,12 @@ public class Goods implements Serializable {
     /**
      * 商品创建时间
      */
-    private LocalDateTime createDate;
+    private Date createDate;
 
     /**
      * 商品更新时间
      */
-    private LocalDateTime updateDate;
+    private Date updateDate;
 
 
 }

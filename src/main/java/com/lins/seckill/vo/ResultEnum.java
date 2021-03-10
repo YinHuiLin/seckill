@@ -1,4 +1,4 @@
-package com.lins.seckill.entity;
+package com.lins.seckill.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

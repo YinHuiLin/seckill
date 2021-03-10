@@ -23,12 +23,12 @@ public class MD5Util {
 
     public static String inputPassToFormPass(String inputPass){
 
-        String string=salt.charAt(0)+salt.charAt(1)+inputPass+salt.charAt(5)+salt.charAt(4);
+        String string=""+salt.charAt(0)+salt.charAt(1)+inputPass+salt.charAt(5)+salt.charAt(4);
         return md5(string);
     }
     public static String formPassToDBPass(String formPass,String salt){
         //新建salt，存入数据库
-        String string=salt.charAt(0)+salt.charAt(1)+formPass+salt.charAt(5)+salt.charAt(4);
+        String string=""+salt.charAt(0)+salt.charAt(1)+formPass+salt.charAt(5)+salt.charAt(4);
         return md5(string);
     }
     //实际应用时，直接从inputpass转换成dbpass
@@ -38,8 +38,10 @@ public class MD5Util {
         return dbpass;
     }
     public static void main(String[] args) {
+            //c21bff23915a157e38fb8bd1a3f127d5
         System.out.println(inputPassToFormPass("123456"));
-        System.out.println(formPassToDBPass("9a55e2956c86f67c7221991e5f08160c","1a2b3c4d"));
+        //8b52a637743c423ebdfa9f1213db8596
+        System.out.println(formPassToDBPass("c21bff23915a157e38fb8bd1a3f127d5","1a2b3c4d"));
         System.out.println(inputPassToDBPass("123456","1a2b3c4d"));
     }
 }

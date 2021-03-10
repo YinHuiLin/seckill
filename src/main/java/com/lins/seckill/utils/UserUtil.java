@@ -1,7 +1,7 @@
 package com.lins.seckill.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lins.seckill.entity.Result;
+import com.lins.seckill.vo.Result;
 import com.lins.seckill.entity.User;
 
 import java.io.*;
@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @ClassName UserUtil
- * @Description TODO
+ * @Description 生成用户工具类
  * @Author lin
  * @Date 2021/2/19 16:39
  * @Version 1.0
@@ -25,14 +25,14 @@ public class UserUtil {
         List<User> users = new ArrayList<>(count);
         for(int i=0;i<count;i++){
             User user = new User();
-            user.setId((int) (13000000000L+i));
+            user.setId((13000000000L+i));
             user.setUserName("user"+i);
             user.setSalt("1a2b3c4d");
-            user.setPassword(MD5Util.inputPassToDBPass("password","1a2b3c4d"));
+            user.setPassword(MD5Util.inputPassToDBPass("123456",user.getSalt()));
             users.add(user);
         }
         System.out.println("Create user...");
-        //insertDB(users);
+//        insertDB(users);
         System.out.println("Insert to db...");
         loginTOGetUserTicket(users);
         System.out.println("write to file");
@@ -52,7 +52,7 @@ public class UserUtil {
     private static void insertDB(List<User> users) throws Exception {
         //插入数据库
         Connection connection = getConn();
-        String sql = "insert into t_user(nickname,salt,password,id) values(?,?,?,?)";
+        String sql = "insert into user(user_name,salt,password,id) values(?,?,?,?)";
         PreparedStatement pstmt = connection.prepareStatement(sql);
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
@@ -74,7 +74,7 @@ public class UserUtil {
      */
     private static void loginTOGetUserTicket(List<User> users) throws IOException {
         //登录，获取userTicket
-        String urlString = "http://localhost:8080/user/login";
+        String urlString = "http://localhost:8080/login/tologin";
         File file = new File("D:\\userTicket.txt");
         if (file.exists()) {
             file.delete();

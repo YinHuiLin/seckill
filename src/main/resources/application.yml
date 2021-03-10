@@ -3,9 +3,9 @@ spring:
     cache: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://localhost:3306/seckill?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: egova
+    password: 341282
     #连接池
     hikari:
       pool-name: DateHikariCP
@@ -24,31 +24,9 @@ spring:
       #心跳测试，测试连接是否可用
       connection-test-query: SELECT 1
 
-  mvc:
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      #启用默认静态资源处理，默认启用
-      add-mappings: true
-      cache:
-        cachecontrol:
-          #缓存相应事务时间，单位秒
-          max-age: 3600
-      chain:
-        #资源链启动缓存，默认启动
-        cache: true
-        #启动资源链
-        enabled: true
-        #启用压缩资源
-        compressed: true
-        #启用h5应用缓存
-        html-application-cache: true
-      static-locations: classpath:/static/
-
   redis:
-    host: 127.0.0.1
+    host: 192.168.124.5
     port: 6379
-    password: egovaredis
     database: 0
     timeout: 10000ms
     lettuce:
@@ -57,16 +35,34 @@ spring:
         max-wait: 10000ms  #最大阻塞等待时间，默认-1
         max-idle: 200      #最大空闲连接，默认8
         min-idle: 5         #最小空闲连接
-
+  web:
+    resources:
+      #启用默认静态资源处理，默认启用
+      cache:
+        cachecontrol:
+          #缓存响应事务时间，单位秒
+          max-age: 3600
+      chain:
+        #资源链启动缓存，默认启动
+        cache: true
+        #启动资源链
+        enabled: true
+        #启用压缩资源，默认禁用，可以把纯文本压缩到70%以上
+        compressed: true
+        #启用h5应用缓存，默认禁用
+        html-application-cache: true
+      static-locations: classpath:/static/
 
 #mybatis-plus的相关配置
 mybatis-plus:
   #配置Mapper.xml映射文件
   mapper-locations: classpath*:/mapper/*Mapper.xml
   #配置Mybatis数据返回类型别名(默认别名是类名)
-  type-aliases-package: com.xzm.seckill.bean
+  type-aliases-package: com.lins.seckill.entity
+
+
 
 #Mybatis sql打印（方法接口所在包，不是Mapper.xml所在的包）
 logging:
   level:
-    com.xzm.seckill.mapper: debug
+    com.lins.seckill.mapper: debug

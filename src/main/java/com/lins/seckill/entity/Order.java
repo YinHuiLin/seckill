@@ -5,13 +5,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author lin
@@ -73,12 +75,12 @@ public class Order implements Serializable {
     /**
      * 订单创建时间
      */
-    private LocalDateTime createDate;
+    private Date createDate;
 
     /**
      * 支付时间
      */
-    private LocalDateTime payDate;
+    private Date payDate;
 
 
 }

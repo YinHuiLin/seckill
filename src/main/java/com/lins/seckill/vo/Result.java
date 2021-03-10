@@ -1,4 +1,4 @@
-package com.lins.seckill.entity;
+package com.lins.seckill.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
-    private Integer code;
+    private long code;
     private String message;
     private Object obj;
     public static Result success(){
@@ -25,6 +25,11 @@ public class Result {
         return new Result(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMessage(),obj);
     }
 
+    /**
+     * @Description 返回失败结果
+     * @param resultEnum
+     * @return com.lins.seckill.vo.Result
+     */
     public static Result error(ResultEnum resultEnum){
         return new Result(resultEnum.getCode(),resultEnum.getMessage(),null);
     }

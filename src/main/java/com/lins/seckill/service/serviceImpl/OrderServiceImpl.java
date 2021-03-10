@@ -1,19 +1,22 @@
 package com.lins.seckill.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.lins.seckill.entity.Order;
 import com.lins.seckill.entity.SeckillGoods;
 import com.lins.seckill.entity.SeckillOrder;
 import com.lins.seckill.entity.User;
+import com.lins.seckill.exception.GlobalException;
 import com.lins.seckill.mapper.OrderMapper;
 import com.lins.seckill.mapper.SeckillGoodsMapper;
-import com.lins.seckill.mapper.SeckillOrderMapper;
+import com.lins.seckill.service.IGoodsService;
 import com.lins.seckill.service.IOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lins.seckill.service.ISeckillGoodsService;
 import com.lins.seckill.service.ISeckillOrderService;
-import com.lins.seckill.vo.GoodsVo;
+import com.lins.seckill.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,31 +35,33 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private ISeckillGoodsService seckillGoodsService;
     @Autowired
+    private IGoodsService goodsService;
+    @Autowired
     private OrderMapper orderMapper;
-    @Autowired
-    private SeckillGoodsMapper seckillGoodsMapper;
-    @Autowired
-    private SeckillOrderMapper seckillOrderMapper;
     @Autowired
     private IOrderService orderService;
     @Autowired
+    private SeckillGoodsMapper seckillGoodsMapper;
+    @Autowired
     private ISeckillOrderService seckillOrderService;
-    @Override
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Transactional
+    @Override
     public Order seckill(User user, GoodsVo goods) {
         //减库存
-        SeckillGoods seckillGoods = seckillGoodsMapper.selectOne(
+        SeckillGoods seckillGoods = seckillGoodsService.getOne(
                 new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
         seckillGoods.setStockCount(seckillGoods.getStockCount()-1);
-        seckillGoodsMapper.updateById(seckillGoods);
-        //解决库存超卖问题
-//        boolean update = seckillGoodsService.update(
-//                new UpdateWrapper<SeckillGoods>().setSql("stock_count = stock_count -1 ")
-//                        .eq("id", seckillGoods.getId()).gt("stock_count", 0)
-//        );
-//        if(!update){
-//            return null;
-//        }
+//        seckillGoodsMapper.updateById(seckillGoods);
+        //使用乐观锁解决库存超卖问题
+        boolean update = seckillGoodsService.update(
+                new UpdateWrapper<SeckillGoods>().setSql("stock_count = stock_count -1 ")
+                        .eq("id", seckillGoods.getId()).gt("stock_count", 0)
+        );
+        if(!update){
+            return null;
+        }
         //生成订单
         Order order = new Order();
         order.setUserId(user.getId());
@@ -68,17 +73,26 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setOrderChannel(1);
         order.setStatus(0);
         order.setCreateDate(new Date());
-        System.out.println("id:"+order.getId());
         orderMapper.insert(order);
+//        orderService.save(order);
         //生成秒杀订单
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setUserId(user.getId());
         seckillOrder.setOrderId(order.getId());
         seckillOrder.setGoodsId(goods.getId());
-        System.out.println("id1:"+seckillOrder.getId());
         seckillOrderService.save(seckillOrder);
-//        seckillOrderMapper.insert(seckillOrder);
-//        redisTemplate.opsForValue().set("order:" + user.getId() + ":" + goods.getId(), seckillOrder);
+        redisTemplate.opsForValue().set("order:" + user.getId() + ":" + goods.getId(), seckillOrder);
         return order;
+    }
+
+    @Override
+    public OrderDetailVo detail(Long orderId) {
+        if(orderId==null){
+            throw new GlobalException(ResultEnum.ORDER_NOT_EXIST);
+        }
+        Order order=orderMapper.selectById(orderId);
+        GoodsVo goodsVo=goodsService.findGoodById(order.getGoodsId());
+        OrderDetailVo detail=new OrderDetailVo(order,goodsVo);
+        return detail;
     }
 }
